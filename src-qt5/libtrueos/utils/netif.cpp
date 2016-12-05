@@ -305,7 +305,8 @@ uint NetworkInterface::devNum()
 
 void NetworkInterface::restart(){
   //restart all network connections
-  system("(sync; ifconfig lagg0 destroy; route -n flush; /etc/rc.d/netif restart) &");
+  //system("(sync; ifconfig lagg0 destroy; route -n flush; /etc/rc.d/netif restart) &");
+  QProcess::startDetached("service network restart");
 }
 
 QStringList NetworkInterface::parseWifiScanLine( QString linein, bool isverbose){
@@ -452,7 +453,7 @@ void NetworkInterface::wifiQuickConnect(QString SSID, QString netKey, QString De
     QString ifConfigLine;
     
     //Set defaults for quick-connect
-    ifConfigLine="SYNCDHCP"; //Use DHCP
+    ifConfigLine="DHCP"; //Use DHCP
 
     // Check if we need to enable the device config in rc.conf
     if ( Utils::getConfFileValue("/etc/rc.conf", "ifconfig_" + DeviceName).isEmpty()) {
@@ -680,7 +681,7 @@ int NetworkInterface::enableWirelessAccessPoint(QString wdev, QString name, QStr
       QTextStream out(&file);
       out << contents.join("\n");
       file.close();
-      Utils::runShellCommand("service hostapd forcestart");
+      Utils::runShellCommand("service hostapd start");
     }else{
       qDebug() << "[WARNING] Could not enable WPA encryption for the new Access Point - is now an open network!!";
       password.clear(); //Could not enable encryption
