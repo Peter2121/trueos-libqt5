@@ -152,7 +152,7 @@ public:
    static QString getValFromCSHFile(QString envFile, QString envVal);
    static QString readTextFile(QString filepath);
    static bool writeTextFile(QString filepath, QString contents, bool replace = true);
-   static void restartNetworking();
+   static void restartNetworking(bool showDialog = true);
    static void runInTerminal(QString command, QString windowTitle=QString());
    static void openInFileManager(QString location);
    static bool validateIPV6(QString);

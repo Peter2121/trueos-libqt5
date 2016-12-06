@@ -660,72 +660,27 @@ bool Utils::writeTextFile(QString filepath, QString contents, bool replace){
 }
 
 // Function which displays a info box and restarts networking
-void Utils::restartNetworking()
+void Utils::restartNetworking(bool showDialog)
 {
-    
-   QMessageBox infoBox;
-   infoBox.setWindowModality(Qt::ApplicationModal);
-   infoBox.setWindowTitle(QObject::tr("Restarting network..."));
-   infoBox.setInformativeText(QObject::tr("Network is restarting, please wait..."));
-   infoBox.setStandardButtons(QMessageBox::NoButton);
-   infoBox.show();
+   if(showDialog){
+     QMessageBox infoBox;
+     infoBox.setWindowModality(Qt::ApplicationModal);
+     infoBox.setWindowTitle(QObject::tr("Restarting network..."));
+     infoBox.setInformativeText(QObject::tr("Network is restarting, please wait..."));
+     infoBox.setStandardButtons(QMessageBox::NoButton);
+     infoBox.show();
 
-   QProcess cmd;
-   cmd.start(QString("/etc/rc.d/netif"), QStringList() << "restart" );
-   while ( cmd.state() != QProcess::NotRunning ) {
-       cmd.waitForFinished(100);
-       QCoreApplication::processEvents();
-   }
-
-   // Set the gateway device name
-   QString route = getConfFileValue("/etc/rc.conf", "defaultrouter=", 1);
-   if ( ! route.isEmpty() ) {
-     infoBox.setInformativeText(QObject::tr("Setting default route..."));
-     cmd.start(QString("route"), QStringList() << "delete" << "default" );
+     QProcess cmd;
+     cmd.start( "service network restart" );
      while ( cmd.state() != QProcess::NotRunning ) {
          cmd.waitForFinished(100);
          QCoreApplication::processEvents();
      }
-
-     cmd.start(QString("route"), QStringList() << "add" << "default" << route );
-     while ( cmd.state() != QProcess::NotRunning ) {
-         cmd.waitForFinished(100);
-         QCoreApplication::processEvents();
-     }
-   }
-
-   // Check for any devices to run DHCP on
-   QStringList ifs = NetworkInterface::getInterfaces();
-   for ( QStringList::Iterator it = ifs.begin(); it != ifs.end(); ++it )
-   {
-       QString dev = *it;
-
-       // Devices we can safely skip
-       if (dev.indexOf("lo") == 0 
-           || dev.indexOf("fwe") == 0 
-           || dev.indexOf("ipfw") == 0
-           || dev.indexOf("plip") == 0
-           || dev.indexOf("pfsync") == 0
-           || dev.indexOf("pflog") == 0
-           || dev.indexOf("usbus") == 0
-           || dev.indexOf("vboxnet") == 0
-           || dev.indexOf("tun") == 0)
-	  continue;
-
-	// Check if this device has DHCP enabled
-	if ( Utils::getConfFileValue( "/etc/rc.conf", "ifconfig_" + dev + "=", 1 ).indexOf("DHCP") != -1 )
-	{
-	   qDebug() << "Running DHCP on " << dev;
-           infoBox.setInformativeText(QObject::tr("Running DHCP..."));
-     	   cmd.start(QString("/etc/rc.d/dhclient"), QStringList() << "start" << dev );
-           while ( cmd.state() != QProcess::NotRunning ) {
-             cmd.waitForFinished(100);
-             QCoreApplication::processEvents();
-           }
-	}
-   }
-
-   infoBox.close();
+      infoBox.close();
+  }else{
+    QProcess::startDetached("service network restart");
+  }
+   
 }
 
 void Utils::runInTerminal(QString command, QString windowTitle)
@@ -974,5 +929,4 @@ bool Utils::logout()
 
     return (delogout->exitCode() == 0);
 }
-
 
