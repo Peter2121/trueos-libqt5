@@ -23,6 +23,15 @@ void dialogWPAEnterprise::init()
     }
 }
 
+void dialogWPAEnterprise::on_buttonBox_clicked(QAbstractButton *button)
+{
+    if (buttonBox->standardButton(button) == QDialogButtonBox::Ok) {
+        saveAndClose();
+    } else { // the cancel button
+        close();
+    }
+}
+
 void dialogWPAEnterprise::slotTypeChanged()
 {
     
@@ -68,7 +77,7 @@ void dialogWPAEnterprise::slotTypeChanged()
 }
 
 
-void dialogWPAEnterprise::slotClose()
+void dialogWPAEnterprise::saveAndClose()
 {
     int type = 0;
     
@@ -86,16 +95,9 @@ void dialogWPAEnterprise::slotClose()
     {
 	type = 3;
     }
-    
-    
-    
-      if ( linePrivateKeyPassword->text() != linePrivateKeyPassword2->text() )
-    {
-	QMessageBox::warning( this, "Network Key Error", "Error: The entered password keys do not match!\n" );
-    } else {
-	emit saved( type, lineEAPIdentity->text(), lineAnonIdentity->text(), lineCACert->text(), lineClientCert->text(), linePrivateKeyFile->text(), linePrivateKeyPassword->text(), comboKeyMgmt->currentIndex(), comboPhase2->currentIndex() );
-	close();
-    }
+
+    emit saved( type, lineEAPIdentity->text(), lineAnonIdentity->text(), lineCACert->text(), lineClientCert->text(), linePrivateKeyFile->text(), linePrivateKeyPassword->text(), comboKeyMgmt->currentIndex(), comboPhase2->currentIndex() );
+    close();
 }
 
 
@@ -155,20 +157,17 @@ void dialogWPAEnterprise::setVariables( int type, QString EAPIdent, QString Anon
     lineClientCert->setText(ClientCert);
     linePrivateKeyFile->setText(PrivKeyFile);
     linePrivateKeyPassword->setText(Password);
-    linePrivateKeyPassword2->setText(Password);
     
     slotTypeChanged();
     
 }
 
-void dialogWPAEnterprise::slotShowKey()
+void dialogWPAEnterprise::on_checkShowKey_clicked(bool checked)
 {
-   if(checkShowKey->isChecked())
+   if(checked)
    {
       linePrivateKeyPassword->setEchoMode(QLineEdit::Normal);
-      linePrivateKeyPassword2->setEchoMode(QLineEdit::Normal);
    } else {
       linePrivateKeyPassword->setEchoMode(QLineEdit::Password);
-      linePrivateKeyPassword2->setEchoMode(QLineEdit::Password);
    }
 }

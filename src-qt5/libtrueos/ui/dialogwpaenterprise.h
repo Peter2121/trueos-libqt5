@@ -34,11 +34,12 @@ public slots:
 
 private slots:
     void slotTypeChanged();
-    void slotClose();
     void slotSelectCACert();
     void slotSelectClientCert();
     void slotSelectPrivateKeyFile();
-    void slotShowKey();
+    void on_checkShowKey_clicked(bool checked);
+    void on_buttonBox_clicked(QAbstractButton *);
+    void saveAndClose();
 
 private:
 
