@@ -14,7 +14,6 @@ LANGUAGE	= C++
 VERSION		= 0.9.9
 
 HEADERS	+= dialogMetaProgress.h \
-	dialogwpaenterprise.h \
 	dialogInfoBox.h \
 	trueos-dialogAPsetup.h \
     trueos-ui.h \
@@ -26,7 +25,6 @@ HEADERS	+= dialogMetaProgress.h \
 
 SOURCES	+= dialogInfoBox.cpp \
 	dialogMetaProgress.cpp \
-	dialogwpaenterprise.cpp \
 	metaWidget.cpp \
 	dialogAPsetup.cpp \
     ui.cpp \
@@ -40,7 +38,6 @@ RESOURCES += libtrueos-ui.qrc
 
 FORMS += dialogInfoBox.ui \
 	dialogMetaProgress.ui \
-	dialogwpaenterprise.ui \
 	dialogAPsetup.ui \
     kbsimpleoptionswidget.ui \
     kboptionswidget.ui \
