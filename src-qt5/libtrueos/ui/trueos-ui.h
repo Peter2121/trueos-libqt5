@@ -82,7 +82,7 @@ protected:
 
 };*/
 
-class dialogWPAEnterprise;
+/*class dialogWPAEnterprise;
 
 class dialogWPAE:public QObject {
   Q_OBJECT
@@ -102,7 +102,7 @@ private slots:
 signals:
   void saved(int, QString, QString, QString, QString, QString, QString, int, int);
 
-};
+};*/
 
 class dialogInfoBox;
 class dialogInfo {
