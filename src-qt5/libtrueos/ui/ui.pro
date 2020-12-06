@@ -117,4 +117,4 @@ include.files=trueos-*.h
 
 INSTALLS += target include
 
-QMAKE_LIBDIR = /usr/local/lib/qt5 /usr/local/lib
+QMAKE_LIBDIR = /usr/local/lib/qt5 /usr/local/lib $$PWD/..
